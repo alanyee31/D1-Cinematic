@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Example Cinematic</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.60.0/phaser.js" integrity="sha512-H05oT7BAjM9Ai1IaFX9zr61NtE2e1P0MkTz3AZXBnseaJSAOt2FGMFJ+vVGutaJxEGA1jxUiYsTBYQNE08/Erw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        class Intro extends Phaser.Scene {
+            constructor() {
+                super('intro');
+            }
+
+            preload(){
+                this.load.image('rubberduck', 'assets/rubberduck.jpg');
+                this.load.audio('squeak', 'assets/sounds/Ducksqueak.mp3');
+            }
+
+            create() {
+                this.add.text(10,10,
+`My friend gave me a rubber duck that he got from CSE101 
+I had never had a rubber duck before and we were having 
+a lot of fun squeezing them and making them squeak.`);
+
+                let thing = this.add.circle(300, 265, 170, 0xffffff);
+                let sprite = this.add.image(300, 265, 'rubberduck');
+                
+                this.sound = this.sound.add('squeak');
+                this.sound.play();
+
+                this.input.on('pointerdown', () => {this.cameras.main.fadeOut(1000, 0, 0, 0)});
+                
+                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {this.scene.start('body')});
+            }
+        }
+
+        class Body extends Phaser.Scene {
+            constructor() {
+                super('body');
+            }
+
+            preload(){
+                this.load.image('duckcard', 'assets/duckcard.png');
+            }
+
+            create() {
+                this.add.text(10,10,
+`We found them so amusing we made a game about
+Rubber ducks in ARTG120. This is one of the cards
+from the game.`);
+                
+                let sprite2 = this.add.image(300, 265, 'duckcard');
+
+                this.input.on('pointerdown', () => {this.cameras.main.fadeOut(1000, 0, 0, 0)});
+                
+                this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {this.scene.start('end')});
+            }
+        }
+
+
+        class End extends Phaser.Scene {
+            constructor() {
+                super('end');
+            }
+
+            preload(){
+                this.load.image('text', 'assets/Text.jpg');
+                this.load.audio('thanks', 'assets/sounds/thankyou.mp3');
+            }
+
+            create() {
+
+                let thing2 = this.add.rectangle(300, 265, 510, 170, 0xffffff);
+
+                let sprite3 = this.add.image(300, 265, 'text');
+
+                this.add.tween({
+                    targets: sprite3,
+                    scale: {from: 0, to: 1},
+                    duration: 1000
+                });
+                 
+                this.sound2 = this.sound.add('thanks');
+                this.sound2.play();
+            }
+
+        }
+
+        new Phaser.Game({
+            width: 640,
+            height: 480,
+            scene: [Intro, Body, End],
+        });
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
